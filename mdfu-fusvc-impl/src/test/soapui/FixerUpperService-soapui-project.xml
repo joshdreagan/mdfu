@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:soapui-project id="a0e533d4-f864-45b8-8d9b-a5ea1a7b0e2c" activeEnvironment="Default" name="FixerUpperService" resourceRoot="${projectDir}" soapui-version="5.1.3" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:interface xsi:type="con:WsdlInterface" id="ea6c4f72-30fd-4324-a810-2501085f3cd2" wsaVersion="NONE" name="FixerUpperServiceSoapBinding" type="wsdl" bindingName="{http://impl.fusvc.mdfu.poc.jboss.org/}FixerUpperServiceSoapBinding" soapVersion="1_1" anonymous="optional" definition="http://localhost:8080/mdfu-fusvc-impl/FixerUpperService?wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="http://localhost:8080/mdfu-fusvc-impl/FixerUpperService?wsdl"><con:part><con:url>http://localhost:8080/mdfu-fusvc-impl/FixerUpperService?wsdl</con:url><con:content><![CDATA[<wsdl:definitions name="FixerUpperService" targetNamespace="http://impl.fusvc.mdfu.poc.jboss.org/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://impl.fusvc.mdfu.poc.jboss.org/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns2="http://schemas.xmlsoap.org/soap/http" xmlns:ns1="http://poc.jboss.org/mdfu/fusvc">
+  <wsdl:import location="http://localhost:8080/mdfu-fusvc-impl/FixerUpperService?wsdl=FixerUpperServicePortType.wsdl" namespace="http://poc.jboss.org/mdfu/fusvc"></wsdl:import>
+  <wsdl:binding name="FixerUpperServiceSoapBinding" type="ns1:FixerUpperServicePortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="submit">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="submit">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="submitResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="FixerUpperService">
+    <wsdl:port binding="tns:FixerUpperServiceSoapBinding" name="FixerUpperServiceImplPort">
+      <soap:address location="http://localhost:8080/mdfu-fusvc-impl/FixerUpperService"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part><con:part><con:url>http://localhost:8080/mdfu-fusvc-impl/FixerUpperService?wsdl=FixerUpperServicePortType.wsdl</con:url><con:content><![CDATA[<wsdl:definitions name="FixerUpperServicePortType" targetNamespace="http://poc.jboss.org/mdfu/fusvc" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://poc.jboss.org/mdfu/fusvc">
+  <wsdl:types>
+    <xs:schema targetNamespace="http://poc.jboss.org/mdfu/fusvc" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:element name="callbackUri" type="xs:string"/>
+      <xs:element name="correlationId" type="xs:string"/>
+      <xs:element name="data" type="xs:string"/>
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="submitResponse"></wsdl:message>
+  <wsdl:message name="submit">
+    <wsdl:part element="ns1:correlationId" name="correlationId"></wsdl:part>
+    <wsdl:part element="ns1:callbackUri" name="callbackUri"></wsdl:part>
+    <wsdl:part element="ns1:data" name="data"></wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="FixerUpperServicePortType">
+    <wsdl:operation name="submit">
+      <wsdl:input message="ns1:submit" name="submit"></wsdl:input>
+      <wsdl:output message="ns1:submitResponse" name="submitResponse"></wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+</wsdl:definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part></con:definitionCache><con:endpoints><con:endpoint>http://localhost:8080/mdfu-fusvc-impl/FixerUpperService</con:endpoint></con:endpoints><con:operation id="4da97953-8924-42f8-91ea-f3b68240cf26" isOneWay="false" action="" name="submit" bindingOperationName="submit" type="Request-Response" outputName="submitResponse" inputName="submit" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="7cab4c40-68e5-4cfe-8baa-136212a9b110" name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/mdfu-fusvc-impl/FixerUpperService</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:fus="http://poc.jboss.org/mdfu/fusvc">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <fus:correlationId>12345</fus:correlationId>
+      <fus:callbackUri>http://localhost:9000/mdfu/FixerUpperCallbackService</fus:callbackUri>
+      <fus:data>foo</fus:data>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://impl.fusvc.mdfu.poc.jboss.org/FixerUpperServicePortType/submit"/><con:wsrmConfig version="1.2"/></con:call></con:operation></con:interface><con:properties/><con:wssContainer/><con:oAuth2ProfileContainer/></con:soapui-project>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="FixerUpperCallbackService" targetNamespace="http://poc.jboss.org/mdfu/fusvc/cb" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://poc.jboss.org/mdfu/fusvc/cb" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+    <xsd:schema xmlns:tns="http://poc.jboss.org/mdfu/fusvc/cb" xmlns:xsd="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://poc.jboss.org/mdfu/fusvc/cb">
+      <xsd:element name="correlationId" type="xsd:string" nillable="false"/>
+      <xsd:element name="data" type="xsd:string" nillable="false"/>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="callbackResponse"/>
+  <wsdl:message name="callback">
+    <wsdl:part name="correlationId" element="tns:correlationId"/>
+    <wsdl:part name="data" element="tns:data"/>
+  </wsdl:message>
+  <wsdl:portType name="FixerUpperCallbackServicePortType">
+    <wsdl:operation name="callback">
+      <wsdl:input name="callback" message="tns:callback"/>
+      <wsdl:output name="callbackResponse" message="tns:callbackResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="FixerUpperCallbackServiceSoapBinding" type="tns:FixerUpperCallbackServicePortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="callback">
+      <soap:operation style="document"/>
+      <wsdl:input name="callback">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="callbackResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="FixerUpperCallbackService">
+    <wsdl:port name="FixerUpperCallbackServicePort" binding="tns:FixerUpperCallbackServiceSoapBinding">
+      <soap:address location="http://localhost:9090/FixerUpperCallbackServicePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

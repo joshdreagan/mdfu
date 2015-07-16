@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:camel="http://camel.apache.org/schema/blueprint"
+           xmlns:camel-cxf="http://camel.apache.org/schema/blueprint/cxf"
+           xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
+           xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+                               http://camel.apache.org/schema/blueprint http://camel.apache.org/schema/blueprint/camel-blueprint.xsd
+                               http://camel.apache.org/schema/blueprint/cxf http://camel.apache.org/schema/blueprint/cxf/camel-cxf.xsd
+                               http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0 http://aries.apache.org/schemas/blueprint-cm/blueprint-cm-1.1.0.xsd
+                               http://camel.apache.org/schema/blueprint http://camel.apache.org/schema/blueprint/camel-blueprint.xsd">
+
+  <cm:property-placeholder persistent-id="org.jboss.poc.mdfu.mp" update-strategy="reload" xmlns="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0">
+    <default-properties>
+      <property name="fusvc.uri" value="http://localhost:8080/mdfu-fusvc-impl/FixerUpperService"/>
+      <property name="fusvc.wsdl" value="org/jboss/poc/mdfu/fusvc/FixerUpperService.wsdl"/>
+      
+      <property name="fusvcCallback.uri" value="http://localhost:9000/mdfu/FixerUpperCallbackService"/>
+
+      <property name="activemq.brokerUrl" value="vm://amq"/>
+      <property name="activemq.username" value="admin"/>
+      <property name="activemq.password" value="admin"/>
+
+      <property name="mdfu.messageQueue" value="org.jboss.poc.mdfu.MessageQueue"/>
+    </default-properties>
+  </cm:property-placeholder>
+  
+  <camel-cxf:cxfEndpoint id="fusvcClient" 
+                         address="${fusvc.uri}" 
+                         wsdlURL="${fusvc.wsdl}" 
+                         serviceClass="org.jboss.poc.mdfu.fusvc.FixerUpperServicePortType">
+    <camel-cxf:properties>
+      <entry key="schema-validation-enabled" value="true"/>
+    </camel-cxf:properties>
+  </camel-cxf:cxfEndpoint>
+
+  <bean id="activemq" class="org.apache.activemq.camel.component.ActiveMQComponent">
+    <property name="brokerURL" value="${activemq.brokerUrl}"/>
+    <property name="userName" value="${activemq.username}"/>
+    <property name="password" value="${activemq.password}"/>
+  </bean>
+
+  <bean id="fusvcHelper" class="org.jboss.poc.mdfu.fusvc.impl.FixerUpperServiceHelper"/>
+
+  <camel:camelContext id="messageProcessor" xmlns="http://camel.apache.org/schema/blueprint">
+    
+    <route id="queueWorker">
+      <from uri="activemq:queue:{{mdfu.messageQueue}}?disableReplyTo=true"/>
+      <onException>
+        <exception>org.apache.camel.processor.validation.PredicateValidationException</exception>
+        <handled>
+          <constant>true</constant>
+        </handled>
+        <log message="Message was invalid... :("/>
+        <setHeader headerName="MDFUCorrelationId">
+          <method ref="fusvcHelper" method="createCorrelationId()"/>
+        </setHeader>
+        <bean ref="fusvcHelper" method="createSubmitMethodCall(${headers[MDFUCorrelationId]}, ${properties:fusvcCallback.uri}, ${body})"/>
+        <setHeader headerName="operationName">
+          <constant>submit</constant>
+        </setHeader>
+        <setHeader headerName="operationNamespace">
+          <simple>http://poc.jboss.org/mdfu/fusvc</simple>
+        </setHeader>
+        <to uri="cxf:bean:fusvcClient"/>
+      </onException>
+      <log message="Got a message: '${body.trim()}'"/>
+      <validate>
+        <simple>${body.trim()} == 'valid message'</simple>
+      </validate>
+      <log message="Message was valid... :)"/>
+    </route>
+
+  </camel:camelContext>
+
+</blueprint>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="FixerUpperService" targetNamespace="http://poc.jboss.org/mdfu/fusvc" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://poc.jboss.org/mdfu/fusvc" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+    <xsd:schema xmlns:tns="http://poc.jboss.org/mdfu/fusvc" xmlns:xsd="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://poc.jboss.org/mdfu/fusvc">
+      <xsd:element name="correlationId" type="xsd:string" nillable="false"/>
+      <xsd:element name="callbackUri" type="xsd:string" nillable="false"/>
+      <xsd:element name="data" type="xsd:string" nillable="false"/>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="submitResponse"/>
+  <wsdl:message name="submit">
+    <wsdl:part name="correlationId" element="tns:correlationId"/>
+    <wsdl:part name="callbackUri" element="tns:callbackUri"/>
+    <wsdl:part name="data" element="tns:data"/>
+  </wsdl:message>
+  <wsdl:portType name="FixerUpperServicePortType">
+    <wsdl:operation name="submit">
+      <wsdl:input name="submit" message="tns:submit"/>
+      <wsdl:output name="submitResponse" message="tns:submitResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="FixerUpperServiceSoapBinding" type="tns:FixerUpperServicePortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="submit">
+      <soap:operation style="document"/>
+      <wsdl:input name="submit">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="submitResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="FixerUpperService">
+    <wsdl:port name="FixerUpperServicePort" binding="tns:FixerUpperServiceSoapBinding">
+      <soap:address location="http://localhost:9090/FixerUpperServicePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
