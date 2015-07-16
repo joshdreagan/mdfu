@@ -17,9 +17,9 @@ public class FixerUpperServiceImpl implements FixerUpperServicePortType {
 
   private static final String BPMS_USERNAME = "bpmsAdmin";
   private static final String BPMS_PASSWORD = "admin1!!";
-  private static final String BPMS_DEPLOYMENT_ID = "org.jboss.poc:camel-ht-jbpm-impl:1.0.0";
+  private static final String BPMS_DEPLOYMENT_ID = "org.jboss.poc:mdfu-bpms-impl:1.0.0";
   private static final String BPMS_BASE_URI = "http://localhost:8080/business-central";
-  private static final String BPMS_PROCESS_ID = "org.jboss.poc.impl.InvalidDataFixerUpper";
+  private static final String BPMS_PROCESS_ID = "FixerUpperWorkflow";
   
   private RuntimeEngine engine = null;
 
