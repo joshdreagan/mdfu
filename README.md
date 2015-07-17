@@ -73,7 +73,7 @@ Start the JBoss BPMS server
 
 Browse to the [JBoss BPMS console](http://localhost:8080/business-central)
 
-Import the [MDFU BPMS Git Repository](https://github.com/joshdreagan/mdfu-bpms)
+Import the [Malformed Data Fixer-Upper BPMS Git Repository](https://github.com/joshdreagan/mdfu-bpms)
 
 Build & Deploy the BPMS project from the 'Project Editor'
 
